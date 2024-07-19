@@ -32,8 +32,8 @@ To compile this program, you need a C compiler such as `gcc`. Follow the steps b
 
 - **Arrow Up**: Move the paddle up.
 - **Arrow Down**: Move the paddle down.
-- **p**: Pause/Resume the game.
-- **x**: Exit the game.
+- **p** : Pause/Resume the game.
+- **x** : Exit the game.
 
 ## Code Overview
 
