@@ -1,6 +1,3 @@
-Certainly! Here is the complete content for the `README.md` file for your Pong game project in C.
-
-```markdown
 # Pong Game in C
 
 This is a simple terminal-based Pong game written in C. The game features a player paddle, an opponent paddle controlled by the computer, and a ball that bounces around the screen. The objective is to prevent the ball from going out of bounds on your side.
@@ -67,7 +64,3 @@ The game loop handles the following:
 - Moving the opponent's paddle based on the ball's position.
 - Gradually increasing the ball's speed at set intervals.
 
-## Conclusion
-
-This Pong game is a simple yet engaging example of a terminal-based game in C. It demonstrates basic concepts such as handling keyboard input, drawing to the terminal, and implementing a game loop. Feel free to modify and extend the game to add more features and improve its functionality.
-```
