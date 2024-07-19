@@ -42,32 +42,18 @@ int kbhit() {
 
 void drawScreen(int y, int x, int paddle_pos, int opponent_pos, int ball_x, int ball_y) {
     printf("\033[%d;%dH", y, x);
-
-    printf("▀ ");
-    for (int i = 0; i < SCREEN_WIDTH; i++) {
-        printf("=");
-    }
+    printf("▀ "); for (int i = 0; i < SCREEN_WIDTH; i++) printf("=");
     printf(" ▀\n");
-
     for (int i = 0; i < SCREEN_HEIGHT; i++) {
         printf("%*s║", x, "");
         for (int j = 0; j < SCREEN_WIDTH; j++) {
-            if ((j == 1 && i >= paddle_pos && i < paddle_pos + PADDLE_SIZE) ||
-                (j == SCREEN_WIDTH - 2 && i >= opponent_pos && i < opponent_pos + PADDLE_SIZE)) {
-                printf("|");
-            } else if (i == ball_y && j == ball_x) {
-                printf("O");
-            } else {
-                printf(" ");
-            }
+            if ((j == 1 && i >= paddle_pos && i < paddle_pos + PADDLE_SIZE) || (j == SCREEN_WIDTH - 2 && i >= opponent_pos && i < opponent_pos + PADDLE_SIZE)) printf("|");
+            else if (i == ball_y && j == ball_x) printf("O");
+            else printf(" ");
         }
         printf("║\n");
     }
-
-    printf("%*s▄ ", x - 1, "");
-    for (int i = 0; i < SCREEN_WIDTH; i++) {
-        printf("=");
-    }
+    printf("%*s▄ ", x - 1, ""); for (int i = 0; i < SCREEN_WIDTH; i++) printf("=");
     printf(" ▄\n\n\n");
     fflush(stdout);
 }
@@ -93,40 +79,24 @@ int main() {
 
     while (1) {
         ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
-
         if (!paused) {
             for (int step = 0; step < ball_speed; step++) {
                 ball_x += ball_dir_x;
                 ball_y += ball_dir_y;
 
                 // Ball collision with paddles
-                if (ball_x == 1 && ball_y >= paddle_pos && ball_y < paddle_pos + PADDLE_SIZE) {
-                    ball_dir_x = -ball_dir_x;
-                }
-                if (ball_x == SCREEN_WIDTH - 2 && ball_y >= opponent_pos && ball_y < opponent_pos + PADDLE_SIZE) {
-                    ball_dir_x = -ball_dir_x;
-                }
+                if (ball_x == 1 && ball_y >= paddle_pos && ball_y < paddle_pos + PADDLE_SIZE) ball_dir_x = -ball_dir_x;
+                if (ball_x == SCREEN_WIDTH - 2 && ball_y >= opponent_pos && ball_y < opponent_pos + PADDLE_SIZE) ball_dir_x = -ball_dir_x;
                 // Ball collision with borders
-                if (ball_y == 0 || ball_y == SCREEN_HEIGHT - 1) {
-                    ball_dir_y = -ball_dir_y;
-                }
-                if (ball_x < 0 || ball_x > SCREEN_WIDTH - 1) {
-                    goto end_game; // Ball went out of bounds, end the game
-                }
+                if (ball_y == 0 || ball_y == SCREEN_HEIGHT - 1) ball_dir_y = -ball_dir_y;
+                if (ball_x < 0 || ball_x > SCREEN_WIDTH - 1) goto end_game; // Ball went out of bounds, end the game
             }
 
             // Move opponent paddle
-            if (opponent_pos + PADDLE_SIZE / 2 < ball_y) {
-                opponent_pos++;
-            } else if (opponent_pos + PADDLE_SIZE / 2 > ball_y) {
-                opponent_pos--;
-            }
-            if (opponent_pos < 0) {
-                opponent_pos = 0;
-            }
-            if (opponent_pos > SCREEN_HEIGHT - PADDLE_SIZE) {
-                opponent_pos = SCREEN_HEIGHT - PADDLE_SIZE;
-            }
+            if (opponent_pos + PADDLE_SIZE / 2 < ball_y) opponent_pos++;
+            else if (opponent_pos + PADDLE_SIZE / 2 > ball_y) opponent_pos--;
+            if (opponent_pos < 0) opponent_pos = 0;
+            if (opponent_pos > SCREEN_HEIGHT - PADDLE_SIZE) opponent_pos = SCREEN_HEIGHT - PADDLE_SIZE;
 
             // Increase ball speed at regular intervals
             if (time(NULL) - last_speed_increase_time >= SPEED_INCREASE_INTERVAL && ball_speed < MAX_BALL_SPEED) {
@@ -149,16 +119,10 @@ int main() {
             if (c == '\033') {
                 getchar();
                 char arrow_key = getchar();
-                if (arrow_key == 'A') {
-                    if (paddle_pos > 0) paddle_pos--;
-                } else if (arrow_key == 'B') {
-                    if (paddle_pos < SCREEN_HEIGHT - PADDLE_SIZE) paddle_pos++;
-                }
-            } else if (c == 'x') { // x
-                break;
-            } else if (c == 'p') { // p
-                paused = !paused;
-            }
+                if (arrow_key == 'A' && paddle_pos > 0) paddle_pos--;
+                else if (arrow_key == 'B' && paddle_pos < SCREEN_HEIGHT - PADDLE_SIZE) paddle_pos++;
+            } else if (c == 'x') break; // x
+            else if (c == 'p') paused = !paused; // p
         }
 
         usleep(game_tick);
